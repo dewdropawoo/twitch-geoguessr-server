@@ -39,12 +39,17 @@ app.post('/submit', cors(), (req, res) => {
         });
     }
 
+    if (!room.roundActive) {
+        return res.status(400).send({
+            message: 'Round not active',
+        })
+    }
+
     if (room.voters.has(userId)) {
         return res.status(400).send({
             message: 'Already voted this round',
         });
     }
-
     
     room.voters.add(userId);
 
@@ -68,20 +73,29 @@ io.on('connection', socket => {
     rooms[channel] = {
         voters: new Set(),
         averageCartesian = [0, 0, 0],
+        roundActive: false,
         socket,
     };
+    // TODO: twitch pubsub activate extension
   });
 
   socket.on('start round', () => {
-
+    const room = rooms[socket.channelId];
+    room.roundActive = true;
+    room.voters = new Set();
+    room.averageCartesian = [0, 0, 0];
+    // TODO: twitch pubsub start round
   });
 
   socket.on('stop round', () => {
-    const room = rooms[channel];
+    const room = rooms[socket.channelId];
+    room.roundActive = false;
+    //TODO: twitch pubsub stop round
   });
 
   socket.on('disconnect', () => {
     delete rooms[socket.channelId];
+    // TODO: twitch pubsub stop extension
   });
 });
 
