@@ -68,6 +68,7 @@ app.post('/submit', cors(), (req, res) => {
 io.on('connection', socket => {
   socket.on('live', (data) => {
     // TODO: verify jwt
+    // TODO: get channel ID from jwt
     const channel = data.channel;
     socket.channelId = channel;
     rooms[channel] = {
