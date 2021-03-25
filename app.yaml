@@ -1,1 +1,4 @@
 runtime: nodejs14
+
+includes:
+  - secrets.yaml
