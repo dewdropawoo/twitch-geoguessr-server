@@ -42,7 +42,7 @@ const PUBSUB_EVENTS = {
 const rooms = {};
 
 function verifyJwt(req, res, next) {
-  const token = req.header('Authorization').split(' ')[1];
+  const token = req.header('Authorization')?.split(' ')[1] ?? '';
   token && jwt.verify(token, TWITCH_SECRET, (err, decoded) => {
     if (err) {
       console.error(err);
